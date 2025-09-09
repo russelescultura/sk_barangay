@@ -1,0 +1,609 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Force header transparency */
+nav.bg-transparent {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+nav.bg-transparent * {
+  background-color: transparent !important;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 199 89% 48%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 199 89% 48%;
+    --radius: 0.5rem;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 199 89% 48%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 199 89% 48%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    overflow-x: hidden;
+  }
+  
+  html {
+    overflow-x: hidden;
+  }
+}
+
+/* Custom scroll animations */
+@layer utilities {
+  .animate-in {
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+
+  .animate-in-delay-100 {
+    animation: fadeInUp 0.8s ease-out 0.1s forwards;
+  }
+
+  .animate-in-delay-200 {
+    animation: fadeInUp 0.8s ease-out 0.2s forwards;
+  }
+
+  .animate-in-delay-300 {
+    animation: fadeInUp 0.8s ease-out 0.3s forwards;
+  }
+
+  .animate-in-delay-400 {
+    animation: fadeInUp 0.8s ease-out 0.4s forwards;
+  }
+
+  .animate-in-delay-500 {
+    animation: fadeInUp 0.8s ease-out 0.5s forwards;
+  }
+
+  .animate-slide-left {
+    animation: slideInLeft 1s ease-out forwards;
+  }
+
+  .animate-slide-right {
+    animation: slideInRight 1s ease-out forwards;
+  }
+
+  .animate-fade-up {
+    animation: fadeInUp 1s ease-out forwards;
+  }
+
+  .animate-fade-down {
+    animation: fadeInDown 1s ease-out forwards;
+  }
+
+  /* Staggered card animations */
+  .stagger-animation > * {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: staggerFadeIn 0.6s ease-out forwards;
+  }
+
+  .stagger-animation > *:nth-child(1) { animation-delay: 0.1s; }
+  .stagger-animation > *:nth-child(2) { animation-delay: 0.2s; }
+  .stagger-animation > *:nth-child(3) { animation-delay: 0.3s; }
+  .stagger-animation > *:nth-child(4) { animation-delay: 0.4s; }
+  .stagger-animation > *:nth-child(5) { animation-delay: 0.5s; }
+  .stagger-animation > *:nth-child(6) { animation-delay: 0.6s; }
+
+  /* Smooth scroll behavior */
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+  
+  /* Prevent horizontal scroll on all containers */
+  .container, .max-w-7xl, .max-w-5xl, .max-w-4xl, .max-w-3xl, .max-w-2xl, .max-w-xl {
+    overflow-x: hidden;
+  }
+  
+  /* Ensure proper width constraints */
+  .w-full {
+    max-width: 100vw;
+  }
+  
+  /* Officer section specific fixes */
+  .officer-carousel {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+  
+  .officer-slide {
+    min-width: 0;
+    flex-shrink: 0;
+  }
+  
+  .officer-card {
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  /* Custom keyframes */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-100px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(100px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+
+  
+  @keyframes staggerFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Hover animations */
+  .hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+
+  /* Loading animations */
+  .loading-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: .5;
+    }
+  }
+
+  /* Gradient animations */
+  .gradient-animate {
+    background-size: 200% 200%;
+    animation: gradientShift 3s ease infinite;
+  }
+
+  @keyframes gradientShift {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  /* Text reveal animation */
+  .text-reveal {
+    overflow: hidden;
+  }
+
+  .text-reveal > * {
+    animation: textReveal 0.8s ease-out forwards;
+  }
+
+  @keyframes textReveal {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Parallax effect for background images */
+  .parallax-bg {
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  /* Smooth transitions for all interactive elements */
+  * {
+    transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  /* Focus states for accessibility */
+  .focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  /* Reduced motion for users who prefer it */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* FullCalendar Base Styles */
+.fc {
+  direction: ltr;
+  text-align: left;
+  font-family: var(--font-sans);
+  color: hsl(var(--foreground));
+}
+
+.fc table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: 1em;
+}
+
+.fc th {
+  text-align: center;
+  font-weight: 600;
+}
+
+.fc th,
+.fc td {
+  border-style: solid;
+  border-width: 1px;
+  padding: 0;
+  vertical-align: top;
+}
+
+.fc .fc-daygrid-day {
+  position: relative;
+  min-height: 120px;
+}
+
+.fc .fc-daygrid-day-frame {
+  position: relative;
+  min-height: 100%;
+  padding: 2px;
+}
+
+.fc .fc-daygrid-day-events {
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.fc .fc-daygrid-event {
+  position: relative;
+  white-space: nowrap;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  margin: 1px 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.fc .fc-daygrid-event:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.fc .fc-daygrid-event .fc-event-title {
+  font-weight: 600;
+  padding: 2px 4px;
+}
+
+.fc .fc-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* FullCalendar Modern Styling */
+.fc {
+  border: none !important;
+  font-family: var(--font-sans);
+  background: transparent;
+}
+
+.fc .fc-toolbar.fc-header-toolbar {
+  margin-bottom: 1.5rem;
+}
+
+.fc .fc-col-header-cell {
+  border: none !important;
+  padding: 1rem 0;
+  background: transparent !important;
+  border-bottom: 2px solid hsl(var(--border)) !important;
+}
+
+.fc .fc-col-header-cell-cushion {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  text-decoration: none !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.fc .fc-daygrid-day {
+  border: 1px solid hsl(var(--border)) !important;
+  background: hsl(var(--background));
+  transition: background-color 0.2s ease;
+}
+
+.fc .fc-daygrid-day:hover {
+  background-color: hsl(var(--muted) / 0.3) !important;
+}
+
+.fc .fc-daygrid-day-number {
+  padding: 0.75rem 0.5rem;
+  font-size: 0.875rem;
+  text-decoration: none !important;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+}
+
+.fc .fc-day-today {
+  background-color: hsl(var(--primary) / 0.08) !important;
+  border: 2px solid hsl(var(--primary) / 0.3) !important;
+}
+
+.fc .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border-radius: 9999px;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  font-weight: 700;
+  box-shadow: 0 2px 8px hsl(var(--primary) / 0.3);
+}
+
+.fc .fc-daygrid-event {
+  border: none !important;
+  border-radius: 0.5rem;
+  margin: 2px;
+  padding: 4px 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.fc .fc-daygrid-event:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: 0.9;
+}
+
+.fc .fc-daygrid-event-harness {
+  margin: 2px 0;
+}
+
+.fc .fc-event-title {
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.fc .fc-event:hover {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.fc .fc-button {
+  border: none !important;
+  background: hsl(var(--muted)) !important;
+  color: hsl(var(--foreground)) !important;
+  font-weight: 600;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.fc .fc-button:hover {
+  background: hsl(var(--muted) / 0.8) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.fc .fc-button-active {
+  background: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
+  box-shadow: 0 2px 8px hsl(var(--primary) / 0.3);
+}
+
+.fc .fc-button:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 3px hsl(var(--ring)) !important;
+}
+
+/* Mobile Responsive Styles for Calendar */
+@media (max-width: 640px) {
+  .fc .fc-col-header-cell-cushion {
+    font-size: 0.75rem;
+    padding: 0.25rem;
+  }
+  
+  .fc .fc-daygrid-day-number {
+    font-size: 0.75rem;
+    padding: 0.25rem;
+  }
+  
+  .fc .fc-daygrid-event {
+    font-size: 0.625rem;
+    margin: 0.5px 1px;
+    padding: 1px 2px;
+  }
+  
+  .fc .fc-event-title {
+    font-size: 0.625rem;
+  }
+  
+  .fc table {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .fc .fc-col-header-cell-cushion {
+    font-size: 0.625rem;
+    padding: 0.125rem;
+  }
+  
+  .fc .fc-daygrid-day-number {
+    font-size: 0.625rem;
+    padding: 0.125rem;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  
+  .fc .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  
+  .fc .fc-daygrid-event {
+    font-size: 0.5rem;
+    margin: 0.25px;
+    padding: 1px;
+  }
+}
+
+@media (max-width: 360px) {
+  .fc .fc-col-header-cell-cushion {
+    font-size: 0.5rem;
+    padding: 0.125rem 0;
+  }
+  
+  .fc .fc-daygrid-day-number {
+    font-size: 0.5rem;
+    padding: 0.125rem;
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  
+  .fc .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  
+  .fc .fc-daygrid-event {
+    font-size: 0.4375rem;
+    margin: 0.125px;
+    padding: 0.5px;
+  }
+  
+  .fc table {
+    font-size: 0.75rem;
+  }
+} 

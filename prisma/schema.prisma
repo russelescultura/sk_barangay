@@ -1,0 +1,398 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String           @id @default(cuid())
+  email           String           @unique
+  name            String?
+  role            Role             @default(USER)
+  profileImage    String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  password        String
+  content         Content[]
+  formSubmissions FormSubmission[]
+  events          Event[]          @relation("eventassignments")
+  programs        Program[]        @relation("programassignments")
+
+  @@map("users")
+}
+
+model Program {
+  id                  String        @id @default(cuid())
+  title               String
+  objectives          String        @db.Text
+  startDate           DateTime
+  endDate             DateTime
+  targetAudience      String
+  status              ProgramStatus @default(ONGOING)
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  budget              Float?
+  category            String?       @db.VarChar(255)
+  schedule            String        @db.Text
+  benefits            String        @db.Text
+  venue               String?       @db.VarChar(255)
+  schedule_type       ScheduleType? @default(RECURRING)
+  start_time          String?       @db.VarChar(5)
+  end_time            String?       @db.VarChar(5)
+  frequency           Frequency?
+  frequency_interval  Int?          @default(1)
+  days_of_week        String?       @db.LongText
+  timezone            String?       @default("Asia/Manila") @db.VarChar(50)
+  schedule_exceptions String?       @db.LongText
+  events              Event[]
+  expenses            Expense[]
+  revenues            Revenue[]
+  users               User[]        @relation("programassignments")
+
+  @@index([frequency], map: "idx_programs_frequency")
+  @@index([schedule_type], map: "idx_programs_schedule_type")
+  @@map("programs")
+}
+
+model Event {
+  id              String      @id @default(cuid())
+  title           String
+  description     String      @db.Text
+  dateTime        DateTime
+  venue           String
+  maxParticipants Int?
+  status          EventStatus @default(PLANNED)
+  poster          String?
+  attachments     String?     @db.Text
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  programId       String
+  endDateTime     DateTime?
+  program         Program     @relation(fields: [programId], references: [id], onDelete: Cascade)
+  forms           Form[]
+  users           User[]      @relation("eventassignments")
+
+  @@index([programId], map: "events_programId_fkey")
+  @@map("events")
+}
+
+model Form {
+  id                 String           @id @default(cuid())
+  title              String
+  type               FormType
+  fields             String           @db.Text
+  fileUpload         Boolean          @default(false)
+  gcashReceipt       Boolean          @default(false)
+  submissionLimit    Int?
+  submissionDeadline DateTime?
+  isActive           Boolean          @default(true)
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  eventId            String
+  accessLink         String?
+  accessQRCode       String?
+  publishStatus      PublishStatus    @default(DRAFT)
+  qrCodeImage        String?
+  submissions        FormSubmission[]
+  event              Event            @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([eventId], map: "forms_eventId_fkey")
+  @@map("forms")
+}
+
+model FormSubmission {
+  id           String           @id @default(cuid())
+  data         String           @db.Text
+  files        String?          @db.Text
+  gcashReceipt String?
+  status       SubmissionStatus @default(PENDING)
+  submittedAt  DateTime         @default(now())
+  reviewedAt   DateTime?
+  reviewedBy   String?
+  notes        String?          @db.Text
+  formId       String
+  userId       String?
+  form         Form             @relation(fields: [formId], references: [id], onDelete: Cascade)
+  user         User?            @relation(fields: [userId], references: [id])
+  revenues     Revenue[]
+
+  @@index([formId], map: "form_submissions_formId_fkey")
+  @@index([userId], map: "form_submissions_userId_fkey")
+  @@map("form_submissions")
+}
+
+model SKMember {
+  id           String         @id @default(cuid())
+  name         String
+  email        String         @unique
+  phone        String
+  role         SKMemberRole
+  status       SKMemberStatus @default(ACTIVE)
+  department   String
+  position     String
+  location     String
+  skills       String?        @db.Text
+  profileImage String?
+  lastActive   DateTime?
+  performance  String?        @db.Text
+  projects     String?        @db.Text
+  achievements String?        @db.Text
+  joinDate     DateTime       @default(now())
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@map("sk_members")
+}
+
+model Location {
+  id          String       @id @default(cuid())
+  name        String
+  description String?      @db.Text
+  address     String?
+  latitude    Float
+  longitude   Float
+  type        LocationType
+  isActive    Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  image       String?
+
+  @@map("locations")
+}
+
+model Expense {
+  id          String          @id @default(cuid())
+  title       String
+  description String?         @db.Text
+  amount      Float
+  category    ExpenseCategory
+  date        DateTime
+  receipt     String?
+  status      ExpenseStatus   @default(PENDING)
+  programId   String
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  program     Program         @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  @@index([programId], map: "expenses_programId_fkey")
+  @@map("expenses")
+}
+
+model Revenue {
+  id               String          @id @default(cuid())
+  title            String
+  description      String?         @db.Text
+  amount           Float
+  source           RevenueSource   @default(MANUAL)
+  date             DateTime
+  receipt          String?
+  status           RevenueStatus   @default(PENDING)
+  programId        String
+  formSubmissionId String?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  formSubmission   FormSubmission? @relation(fields: [formSubmissionId], references: [id])
+  program          Program         @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  @@index([programId], map: "revenues_programId_fkey")
+  @@index([formSubmissionId], map: "revenues_formSubmissionId_fkey")
+  @@map("revenues")
+}
+
+model YouthProfile {
+  id                     Int      @id @default(autoincrement())
+  trackingId             String   @unique
+  fullName               String
+  dateOfBirth            DateTime
+  age                    Int
+  sex                    String
+  civilStatus            String   @default("Single")
+  profilePicture         String?
+  mobileNumber           String
+  emailAddress           String?
+  barangay               String
+  streetAddress          String
+  educationLevel         String
+  gradeLevel             String?
+  schoolName             String
+  courseStrand           String?
+  isGraduated            Boolean  @default(false)
+  lastSchoolYear         String?
+  skills                 String   @db.Text
+  hobbies                String   @db.Text
+  preferredPrograms      String   @db.Text
+  isEmployed             Boolean  @default(false)
+  occupation             String?
+  workingHours           String?
+  skMembership           Boolean  @default(false)
+  volunteerExperience    String   @db.Text
+  leadershipRoles        String   @db.Text
+  isPWD                  Boolean  @default(false)
+  pwdType                String?
+  indigenousGroup        String?
+  isSoloParent           Boolean  @default(false)
+  specialCases           String?  @db.Text
+  emergencyContactPerson String?
+  emergencyContactNumber String?
+  emergencyRelationship  String?
+  latitude               Float?
+  longitude              Float?
+  status                 String   @default("Active")
+  committee              String
+  participation          Int      @default(0)
+  dateOfRegistration     String
+  lastActivity           String
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  @@map("youth_profiles")
+}
+
+model Content {
+  id                 String        @id @default(cuid())
+  title              String
+  description        String?       @db.Text
+  type               ContentType
+  status             ContentStatus @default(DRAFT)
+  fileUrl            String?
+  thumbnail          String?
+  tags               String?       @db.Text
+  authorId           String
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  featured           Boolean       @default(false)
+  order              Int?          @default(0)
+  fileUrls           String?       @db.Text
+  thumbnailMode      String?       @default("SINGLE")
+  selectedThumbnails String?       @db.Text
+  author             User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([authorId], map: "content_authorId_fkey")
+  @@map("content")
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum ProgramStatus {
+  ONGOING
+  COMPLETED
+  CANCELLED
+}
+
+enum ScheduleType {
+  ONE_TIME
+  RECURRING
+}
+
+enum Frequency {
+  DAILY
+  WEEKLY
+  BI_WEEKLY
+  MONTHLY
+  CUSTOM
+}
+
+enum EventStatus {
+  PLANNED
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum FormType {
+  REGISTRATION
+  SURVEY
+  WAIVER
+  FEEDBACK
+  CUSTOM
+}
+
+enum SubmissionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum PublishStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum SKMemberRole {
+  SK_CHAIRMAN
+  SK_VICE_CHAIRMAN
+  SK_SECRETARY
+  SK_TREASURER
+  SK_COUNCILOR
+  SK_YOUTH_REPRESENTATIVE
+}
+
+enum SKMemberStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+enum ExpenseCategory {
+  VENUE
+  MATERIALS
+  FOOD
+  TRANSPORTATION
+  EQUIPMENT
+  MARKETING
+  ADMINISTRATIVE
+  OTHER
+}
+
+enum ExpenseStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum RevenueSource {
+  MANUAL
+  GCASH
+}
+
+enum RevenueStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum LocationType {
+  SCHOOL
+  GOVERNMENT
+  HEALTH
+  COMMERCIAL
+  SPORTS
+  RELIGIOUS
+  EMERGENCY
+  RESIDENTIAL
+  RECREATION
+  GYMNASIUM
+}
+
+enum ContentType {
+  POST
+  GALLERY
+  VIDEO
+  FILE
+  ANNOUNCEMENT
+  NEWS
+  EVENT
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
